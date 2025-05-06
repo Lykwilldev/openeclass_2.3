@@ -213,20 +213,42 @@ function update_assignment_submit()
 
 
 // checks if admin user
+//function is_admin($username, $password, $mysqlMainDb) {
+
+//	mysql_select_db($mysqlMainDb);
+//	$r = mysql_query("SELECT * FROM user, admin WHERE admin.idUser = user.user_id
+//            AND user.username = '$username' AND user.password = '$password'");
+//	if (!$r or mysql_num_rows($r) == 0) {
+//		return FALSE;
+//	} else {
+//		$row = mysql_fetch_array($r);
+//		$_SESSION['uid'] = $row['user_id'];
+//		//we need to return the user id
+//		//or setup session UID with the admin's User ID so that it validates @ init.php
+//		return TRUE;
+//	}
+//}
+
+//Correction SQLi 
 function is_admin($username, $password, $mysqlMainDb) {
 
-	mysql_select_db($mysqlMainDb);
-	$r = mysql_query("SELECT * FROM user, admin WHERE admin.idUser = user.user_id
-            AND user.username = '$username' AND user.password = '$password'");
-	if (!$r or mysql_num_rows($r) == 0) {
-		return FALSE;
-	} else {
-		$row = mysql_fetch_array($r);
-		$_SESSION['uid'] = $row['user_id'];
-		//we need to return the user id
-		//or setup session UID with the admin's User ID so that it validates @ init.php
-		return TRUE;
-	}
+        mysql_select_db($mysqlMainDb);
+        $stmt = $mysqli->prepare(
+                "SELECT user.user_id FROM user
+                 JOIN admin ON admin.idUser = user.user_id
+                 WHERE user.username = ? AND user.password = ?"
+        );
+        $stmt->bind_param('ss', $username, $password);
+        $stmt->execute()
+        $r = $stmt->get_result();
+
+        if ($r->num_rows === 0) {
+                return FALSE;
+        } else {
+                $row = $r->fetch_assoc();
+                $_SESSION['uid'] = $row['user_id'];
+                return TRUE;
+        }
 }
 
 // Check whether an entry with the specified $define_var exists in the accueil table
