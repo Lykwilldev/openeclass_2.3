@@ -99,7 +99,7 @@ if (!isset($submit)) {
 		<td colspan='2'><select name='department'>";
 	$deps=mysql_query("SELECT name, id FROM faculte ORDER BY id");
 	while ($dep = mysql_fetch_array($deps)) {
-		$tool_content .= "\n<option value='".$dep[1]."'>".$dep[0]."</option>";
+		$tool_content .= "\n<option value='".htmlspecialchars($dep[1], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($dep[0], ENT_QUOTES, 'UTF-8')."</option>";
 	}
 	$tool_content .= "\n</select>
 	</td>
@@ -129,7 +129,14 @@ if (!isset($submit)) {
 } else {
 
 	// trim white spaces in the end and in the beginning of the word
-	$uname = preg_replace('/\ +/', ' ', trim(isset($_POST['uname'])?$_POST['uname']:''));
+	//$uname = htmlspecialchars(preg_replace('/\ +/', ' ', trim(isset($_POST['uname'])?$_POST['uname']:'')), ENT_QUOTES, 'UTF-8');
+	$prenom_form = htmlspecialchars(trim($_POST['prenom_form']), ENT_QUOTES, 'UTF-8');
+    $nom_form = htmlspecialchars(trim($_POST['nom_form']), ENT_QUOTES, 'UTF-8');
+    $uname = htmlspecialchars(trim($_POST['uname']), ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars(trim($_POST['email']), ENT_QUOTES, 'UTF-8');
+    $am = htmlspecialchars(trim($_POST['am']), ENT_QUOTES, 'UTF-8');
+    $department = htmlspecialchars(trim($_POST['department']), ENT_QUOTES, 'UTF-8');
+    $lang = htmlspecialchars(trim($_POST['lang']), ENT_QUOTES, 'UTF-8');
 	// registration
 	$registration_errors = array();
 	// check if there are empty fields

@@ -35,7 +35,7 @@
 $require_login = true;
 $helpTopic = 'Profile';
 $require_valid_uid = TRUE;
-
+session_start();
 include '../../include/baseTheme.php';
 
 $nameTools = $langChangePass;
@@ -44,9 +44,21 @@ $navigation[]= array ("url"=>"../profile/profile.php", "name"=> $langModifProfil
 check_uid();
 $tool_content = "";
 $passurl = $urlSecure.'modules/profile/password.php';
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+	$_SESSION['csrf_token']  = md5(uniqid(mt_rand(), true));
+	$_SESSION['csrf_token'] = htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8');
+
+}
 
 if (isset($submit) && isset($changePass) && ($changePass == "do")) {
 
+	
+	// Validate the CSRF token
+	if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed.");
+    }
+	
 	if (empty($_REQUEST['password_form']) || empty($_REQUEST['password_form1']) || empty($_REQUEST['old_pass'])) {
 		header("location:". $passurl."?msg=3");
 		exit();
@@ -149,6 +161,7 @@ if(isset($msg)) {
 if (!isset($changePass)) {
 	$tool_content .= "
 <form method=\"post\" action=\"$passurl?submit=yes&changePass=do\">
+	<input type='hidden' name='csrf_token' value='{$_SESSION['csrf_token']}'>
   <table width=\"99%\">
   <tbody>
   <tr>

@@ -78,11 +78,11 @@ if (mysql_num_rows($result) > 0) {
 	for($i=0; $i < $numOfAnnouncements; $i++) {
 		$tool_content .= "<tr><td colspan='2'>
 		<img style='border:0px;' src='${urlAppend}/template/classic/img/arrow_grey.gif' alt='' />
-		<b>".$announceArr[$i][1]."</b>
+		<b>".htmlspecialchars($announceArr[$i][1])."</b>
 		(".greek_format($announceArr[$i][0]).")
 		<p>
-		".$announceArr[$i][2]."<br />
-		<i>".$announceArr[$i][3]."</i></p>
+		".htmlspecialchars($announceArr[$i][2])."<br />
+		<i>".htmlspecialchars($announceArr[$i][3])."</i></p>
 		</td>
 		</tr>";
 	}

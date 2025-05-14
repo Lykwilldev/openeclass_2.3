@@ -46,6 +46,7 @@ include 'admin.inc.php';
 include '../auth/auth.inc.php';
 include '../../include/jscalendar/calendar.php';
 
+session_start();
 if (isset($_GET['u']) or isset($_POST['u']))
 $_SESSION['u_tmp']=$u;
 if(!isset($_GET['u']) or !isset($_POST['u']))
@@ -57,6 +58,10 @@ $lang_editor = $lang_jscalendar = langname_to_code($language);
 
 $jscalendar = new DHTML_Calendar($urlServer.'include/jscalendar/', $lang_jscalendar, 'calendar-blue2', false);
 $head_content .= $jscalendar->get_load_files_code();
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+	$_SESSION['csrf_token']  = md5(uniqid(mt_rand(), true));
+}
 
 // Initialise $tool_content
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
@@ -205,6 +210,7 @@ $tool_content .= "
       <input type='hidden' name='u' value='$u' />
       <input type='hidden' name='u_submitted' value='1' />
       <input type='hidden' name='registered_at' value='".$info['registered_at']."' />
+	  <input type='hidden' name='csrf_token' value=".$_SESSION['csrf_token'] .">
       <input type='submit' name='submit_edituser' value='$langModify' />
     </td>
   </tr>
@@ -287,6 +293,11 @@ $tool_content .= "
 			}
 		}
 	}  else { // if the form was submitted then update user
+
+		// Validate the CSRF token
+		if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+			die("CSRF token validation failed.");
+		}
 
 		// get the variables from the form and initialize them
 		$fname = isset($_POST['fname'])?$_POST['fname']:'';

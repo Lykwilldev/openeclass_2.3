@@ -99,6 +99,7 @@ if (isset($_GET['store']) && $is_adminOfCourse) {
 if (isset($chatLine) and trim($chatLine) != '') {
 	$fchat = fopen($fileChatName,'a');
 	$chatLine = mathfilter($chatLine, 12, '../../courses/mathimg/');
+	$chatLine = htmlspecialchars($chatLine, ENT_QUOTES, 'UTF-8');
 	fwrite($fchat,$timeNow.' - '.$nick.' : '.stripslashes($chatLine)."\n");
 	fclose($fchat);
 }

@@ -341,7 +341,7 @@ if ($is_adminOfCourse) {
 		$tool_content .= "<td width='2%'>
 		<img src='../../template/classic/img/arrow_grey.gif' title='bullet' border='0'></td><td>
 		<div align='left'>
-		<a href='group_space.php?userGroupId=".$group["id"]."'>".$group["name"]."</a></div></td>";
+		<a href='group_space.php?userGroupId=".$group["id"]."'>".htmlspecialchars($group["name"])."</a></div></td>";
 		$tool_content .= "<td width='35%'>".uid_to_name($group['tutor'])."</td>";
       		$tool_content .= "<td><div class=\"cellpos\">".$countRegistered."</div></td>";
 		if ($group['maxStudent'] == 0) {
@@ -353,7 +353,7 @@ if ($is_adminOfCourse) {
 		$tool_content .= "<td width='10%'><div class=\"cellpos\">
 		<a href=\"group_edit.php?userGroupId=".$group["id"]."\">
 		<img src=\"../../template/classic/img/edit.gif\" border=\"0\" title=\"".$langEdit."\"></a>
-		<a href=\"".$_SERVER['PHP_SELF']."?delete_one=yes&id=".$group["id"]."\" onClick=\"return confirmation('".addslashes($group["name"])."');\">
+		<a href=\"".$_SERVER['PHP_SELF']."?delete_one=yes&id=".$group["id"]."\" onClick=\"return confirmation('".htmlspecialchars($group["name"])."');\">
 		<img src=\"../../template/classic/img/delete.gif\" border=\"0\" title=\"".$langDelete."\"></a></div></td>
     		</tr>";
 		$totalRegistered = $totalRegistered+$countRegistered;
@@ -424,16 +424,16 @@ else {
 		// Allow student to enter group only if member
 		if(@($tutorCheck == 1)) {
 			if ($uid == $group['tutor']) {
-				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">".$group["name"]."</a>
+				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">".htmlspecialchars($group["name"])."</a>
 				<span style='color:#900; weight:bold;'>($langOneMyGroups)</span>";
 			} else {
-				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">".$group["name"]."</a>";
+				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">".htmlspecialchars($group["name"])."</a>";
 			}
 		}
 		// STUDENT VIEW
 		else {
 			if(isset($myTeam) && $myTeam == $group['id']) {
-				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">".$group["name"]."</a>&nbsp;&nbsp;($langMyGroup)";
+				$tool_content .= "<a href=\"group_space.php?userGroupId=".$group["id"]."\">". htmlspecialchars($group["name"])."</a>&nbsp;&nbsp;($langMyGroup)";
 			} else {
 				$tool_content .= $group['name'];
 			}

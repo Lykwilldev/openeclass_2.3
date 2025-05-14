@@ -161,6 +161,8 @@ elseif ($a == 1)  {
 			$tool_content .= "<center><p><a href=\"$_SERVER[PHP_SELF]?a=1\">".$langReturnToAddFaculte."</a></p></center>";
 		} else {
 		// OK Create the new faculty
+			$safecodefaculte = htmlspecialchars($codefaculte);
+			$safefaculte = htmlspecialchars($faculte);
 			mysql_query("INSERT into faculte(code,name,generator,number) VALUES(" . autoquote($codefaculte) . ',' . autoquote($faculte) . ",'100','1000')")
 				or die ($langNoSuccess);
 			$tool_content .= "<p>".$langAddSuccess."</p><br />";

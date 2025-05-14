@@ -215,7 +215,8 @@ function expanded_faculte($fac_name, $facid, $uid) {
 	}
 
 	$retString .= "<table width='99%' align='left'><tbody>
-                       <tr><td><a name='top'> </a>$langFaculty: <b>$fac_name</b>&nbsp;&nbsp;</td></tr>";
+        <tr><td><a name='top'> </a>$langFaculty: <b>" . htmlspecialchars($fac_name, ENT_QUOTES, 'UTF-8') . "</b>&nbsp;&nbsp;</td></tr>";
+
 
 	// get the different course types available for this faculte
 	$typesresult = db_query("SELECT DISTINCT type FROM cours

@@ -337,6 +337,11 @@ if (isset($_POST['create_course'])) {
         $nameTools = $langCourseCreate;
         $facid = intval($faculte);
         $facname = find_faculty_by_id($facid);
+		$facname = htmlspecialchars($facname);
+
+		
+
+		
 
         // create new course code: uppercase, no spaces allowed
         $repertoire = strtoupper(new_code($facid));
