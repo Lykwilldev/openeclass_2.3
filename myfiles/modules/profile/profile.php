@@ -32,12 +32,24 @@ include "../auth/auth.inc.php";
 $require_valid_uid = TRUE;
 $tool_content = "";
 
+session_start();
 check_uid();
 $nameTools = $langModifProfile;
 check_guest();
 $allow_username_change = !get_config('block-username-change');
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+	$_SESSION['csrf_token']  = md5(uniqid(mt_rand(), true));
+	
+}
 
 if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
+	
+	// Validate the CSRF token
+	if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+		die("CSRF token validation failed.");
+	}
+	
         if (!$allow_username_change) {
                 $username_form = $uname;
         }
@@ -211,6 +223,7 @@ $passurl = $urlSecure.'modules/profile/password.php';
 $authmethods = array("imap","pop3","ldap","db","shibboleth");
 
 if ((!isset($changePass)) || isset($_POST['submit'])) {
+
 	$tool_content .= "<div id=\"operations_container\"><ul id=\"opslist\">";
 	if(!in_array($password_form,$authmethods)) {
 		$tool_content .= "<li><a href=\"".$passurl."\">".$langChangePass."</a></li>";
@@ -302,6 +315,8 @@ if ((!isset($changePass)) || isset($_POST['submit'])) {
     </tr>
 	<tr>
       <th>&nbsp;</th>
+	  <input type='hidden' name='csrf_token' value=".$_SESSION['csrf_token'] .">
+
       <td><input type=\"Submit\" name=\"submit\" value=\"$langModify\"></td>
     </tr>
     </tbody>

@@ -201,7 +201,7 @@ hContent;
         }
     }
     /*----------------------------------------
-	SUBMIT ANNOUNCEMENT COMMAND   VULNERABILITY
+	SUBMIT ANNOUNCEMENT COMMAND   
 	--------------------------------------*/
 
     if (isset($_POST['submitAnnouncement'])) {
@@ -406,7 +406,7 @@ hContent;
             if ($myrow["title"]=="") {
                 $tool_content .= "".$langAnnouncementNoTille."";
             } else {
-                $tool_content .= "".$myrow["title"]."";
+                $tool_content .= "".htmlspecialchars($myrow["title"])."";
             }
 
             $tool_content .= "</b>&nbsp;<small>(" . $myrow['temps'] . ")</small>
@@ -476,7 +476,7 @@ else {
 			}
 			$tool_content .= "
 			<td width='1'><img style='padding-top:3px;' src='${urlServer}/template/classic/img/arrow_grey.gif' title='bullet' /></td>
-			<td><b>$myrow[title]</b>&nbsp;<small>(" . nice_format($myrow["temps"]) . ")</small><br/>".unescapeSimple($content)."</td></tr>";
+			<td><b>". htmlspecialchars($myrow[title])."</b>&nbsp;<small>(" . nice_format(htmlspecialchars($myrow["temps"])) . ")</small><br/>$content</td></tr>";
 			$k++;
 		} // while loop
 		$tool_content .= "

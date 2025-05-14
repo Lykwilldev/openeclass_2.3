@@ -44,6 +44,8 @@ $nameTools = $langChangePass;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $navigation[]= array ("url"=>"./edituser.php", "name"=> $langEditUser);
 
+
+session_start();
 check_uid();
 $tool_content = "";
 
@@ -52,11 +54,15 @@ if (!isset($urlSecure)) {
 } else {
 	$passurl = $urlSecure.'modules/admin/password.php';
 }
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+	$_SESSION['csrf_token'] = md5(uniqid(mt_rand(), true));
+}
 
 if (!isset($changePass)) {
 	$tool_content .= "
 <form method=\"post\" action=\"$passurl?submit=yes&changePass=do&userid=$userid\">
-<input type='hidden' name='csrf_token' value='{$_SESSION['csrf_token']}'>
+	<input type='hidden' name='csrf_token' value='{$_SESSION['csrf_token']}'>
   <table class=\"FormData\" width=\"99%\" align=\"left\">
   <tbody>
   <tr>
@@ -81,14 +87,12 @@ if (!isset($changePass)) {
 }
 
 elseif (isset($submit) && isset($changePass) && ($changePass == "do")) {
-	// Generate a CSRF token if it doesn't exist
-	if (empty($_SESSION['csrf_token'])) {
-		$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-	}
+	
 	// Validate the CSRF token
 	if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("CSRF token validation failed.");
     }
+	
 	$userid = $_REQUEST['userid'];
 	if (empty($_REQUEST['password_form']) || empty($_REQUEST['password_form1'])) {
 		$tool_content .= mes($langFields, "", 'caution');

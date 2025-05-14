@@ -736,9 +736,9 @@ if (mysql_num_rows($sql) == 0) {
                                 $file_url = file_url($cmdDirName, $entry['filename']);
                                 $link_extra = " title='$langSave' target='_blank'";
                                 if (empty($entry['title'])) {
-                                        $link_text = $entry['filename'];
+                                        $link_text = htmlspecialchars($entry['filename']);
                                 } else {
-                                        $link_text = $entry['title'];
+                                        $link_text = htmlspecialchars($entry['title']);
                                 }
                                 if ($entry['copyrighted']) {
                                         $link_text .= " <img src='./img/copyrighted.jpg' />";
